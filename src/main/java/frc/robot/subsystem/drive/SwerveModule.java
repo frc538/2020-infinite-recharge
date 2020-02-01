@@ -22,7 +22,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  * Add your docs here.
  */
 public class SwerveModule {
-    private static final int SLOT_ID = 0;
     private static final double WHEEL_DIAM = 4*2.54/100;
 
     private final CANSparkMax drive;
