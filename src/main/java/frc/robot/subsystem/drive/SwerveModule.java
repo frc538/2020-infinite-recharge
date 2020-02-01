@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**
@@ -22,8 +23,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  */
 public class SwerveModule {
     private static final int SLOT_ID = 0;
-    private static final double MAX_ANG_VEL = Math.PI;
-    private static final double MAX_ANG_ACC = 2*Math.PI;
     private static final double WHEEL_DIAM = 4*2.54/100;
 
     private final CANSparkMax drive;
@@ -37,6 +36,9 @@ public class SwerveModule {
     public SwerveModule(int driveId, int turnId, int absEncId) {
         drive = new CANSparkMax(driveId, MotorType.kBrushless);
         turn = new CANSparkMax(turnId, MotorType.kBrushless);
+
+        drive.restoreFactoryDefaults();
+        turn.restoreFactoryDefaults();
         
         driveEncoder = drive.getEncoder();
         driveEncoder.setPositionConversionFactor(Math.PI*WHEEL_DIAM);
@@ -52,17 +54,16 @@ public class SwerveModule {
         turnEncoder.setPosition(absEncoder.getDistance());
 
         driveController = new CANPIDController(drive);
-        driveController.setP(1);
-
         turnController = new CANPIDController(turn);
-        turnController.setP(1);
-        turnController.setSmartMotionAccelStrategy(CANPIDController.AccelStrategy.kTrapezoidal, SLOT_ID);
-        turnController.setSmartMotionMaxAccel(MAX_ANG_ACC, SLOT_ID);
-        turnController.setSmartMotionMaxVelocity(MAX_ANG_VEL, SLOT_ID);
     }
 
     public SwerveModuleState getState() {
         return new SwerveModuleState(driveEncoder.getVelocity(), new Rotation2d(turnEncoder.getPosition()));
+    }
+
+    public void setState(SwerveModuleState state) {
+        driveController.setReference(state.speedMetersPerSecond, ControlType.kVelocity);
+        turnController.setReference(state.angle.getRadians(), ControlType.kPosition);   
     }
 
 }
