@@ -8,8 +8,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.command.drive.DriveCommand;
 import frc.robot.subsystem.drive.DriveSubsystem;
 
 /**
@@ -20,6 +22,7 @@ import frc.robot.subsystem.drive.DriveSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final Joystick joystick = new Joystick(Constants.JOYSTICK_DRIVER_USB_ID);
   private final DriveSubsystem drive = new DriveSubsystem();
 
 
@@ -31,6 +34,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    drive.setDefaultCommand(new DriveCommand(drive, joystick));
   }
 
   /**

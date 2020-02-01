@@ -34,5 +34,8 @@ public final class Constants {
     public static final int REAR_LEFT_ABS_ENCODER_ID = 2;
     public static final int REAR_RIGHT_ABS_ENCODER_ID = 3;
 
+    public static final int JOYSTICK_DRIVER_USB_ID = 0;
+    
+
 
 }
