@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import frc.robot.Utilities;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
@@ -22,7 +23,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  * Add your docs here.
  */
 public class SwerveModule {
-    private static final double WHEEL_DIAM = 4*2.54/100;
+    private static final double WHEEL_DIAM = Utilities.inchesToMeters(4);
 
     private final CANSparkMax drive;
     private final CANSparkMax turn;

@@ -13,19 +13,20 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Utilities;
 
 public class DriveSubsystem extends SubsystemBase {
 
-  private final double shooterY = inchesToMeters(-9.248);
+  private final double shooterY = Utilities.inchesToMeters(-9.248);
 
-  private final Translation2d frontLeftLocation = new Translation2d(inchesToMeters(-10),
-      inchesToMeters(-4.405) - shooterY);
-  private final Translation2d frontRightLocation = new Translation2d(inchesToMeters(10),
-      inchesToMeters(-4.405) - shooterY);
-  private final Translation2d rearLeftLocation = new Translation2d(inchesToMeters(-10),
-      inchesToMeters(-27.905) - shooterY);
-  private final Translation2d rearRightLocation = new Translation2d(inchesToMeters(10),
-      inchesToMeters(-27.905) - shooterY);
+  private final Translation2d frontLeftLocation = new Translation2d(Utilities.inchesToMeters(-10),
+      Utilities.inchesToMeters(-4.405) - shooterY);
+  private final Translation2d frontRightLocation = new Translation2d(Utilities.inchesToMeters(10),
+      Utilities.inchesToMeters(-4.405) - shooterY);
+  private final Translation2d rearLeftLocation = new Translation2d(Utilities.inchesToMeters(-10),
+      Utilities.inchesToMeters(-27.905) - shooterY);
+  private final Translation2d rearRightLocation = new Translation2d(Utilities.inchesToMeters(10),
+      Utilities.inchesToMeters(-27.905) - shooterY);
 
   private final SwerveModule frontLeftModule = new SwerveModule(Constants.FRONT_LEFT_DRIVE_CAN_ID,
       Constants.FRONT_LEFT_TURN_CAN_ID, Constants.FRONT_LEFT_ABS_ENCODER_ID);
@@ -43,7 +44,7 @@ public class DriveSubsystem extends SubsystemBase {
    * Creates a new DriveSubsystem.
    */
   public DriveSubsystem() {
-  
+
   }
 
   public void drive(double xSpeed, double ySpeed, double yawSpeed) {
@@ -58,9 +59,5 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-  }
-
-  private double inchesToMeters(double inches) {
-    return inches * 2.54 / 100;
   }
 }
