@@ -5,23 +5,22 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.command.collect;
+package frc.robot.command.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystem.BallCollector;
+import frc.robot.subsystem.ShooterSubsystem;
 
-public class Collect extends CommandBase {
+public class ShootCommand extends CommandBase {
+  private final ShooterSubsystem mShooter;
+  private final boolean mShoot;
 
-  private final BallCollector mCollector;
   /**
-   * Creates a new Collect.
+   * Creates a new Shoot.
    */
-  public Collect(BallCollector collector) {
-
-    mCollector = collector;
-    addRequirements(mCollector);
-
-    // Use addRequirements() here to declare subsystem dependencies.
+  public ShootCommand(ShooterSubsystem shooter, boolean shoot) {
+    mShooter = shooter;
+    mShoot = shoot;
+    addRequirements(mShooter);
   }
 
   // Called when the command is initially scheduled.
@@ -32,12 +31,11 @@ public class Collect extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (mCollector.isOn()){
-      mCollector.stop();
-    } else{
-      mCollector.collect();
+    if (mShoot) {
+      mShooter.shoot();
+    } else {
+      mShooter.stop();
     }
-    
   }
 
   // Called once the command ends or is interrupted.
