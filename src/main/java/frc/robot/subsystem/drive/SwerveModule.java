@@ -7,17 +7,18 @@
 
 package frc.robot.subsystem.drive;
 
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Utilities;
 
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**
  * Add your docs here.
@@ -32,11 +33,15 @@ public class SwerveModule {
     private final AnalogInput absEncoder;
     private final CANPIDController driveController;
     private final CANPIDController turnController;
+    private final double mAngleOffset;
 
     public final int TURN_ID;
 
 
     public SwerveModule(int driveId, int turnId, int absEncId, double angleOffset) {
+
+        mAngleOffset = angleOffset;
+        
         drive = new CANSparkMax(driveId, MotorType.kBrushless);
         turn = new CANSparkMax(turnId, MotorType.kBrushless);
 
@@ -51,7 +56,7 @@ public class SwerveModule {
 
         turnEncoder = turn.getEncoder();
         turnEncoder.setPositionConversionFactor(2 * Math.PI / 18);
-        turnEncoder.setPosition((absEncoder.getVoltage()*360/5 - angleOffset) * Math.PI / 180);
+        turnEncoder.setPosition((absEncoder.getVoltage()*360.0/5 - angleOffset) * Math.PI / 180);
 
         driveController = new CANPIDController(drive);
         turnController = new CANPIDController(turn);
@@ -62,19 +67,26 @@ public class SwerveModule {
         turnController.setP(0.08);
     }
 
+    public void init(){
+     
+        turnEncoder.setPosition((absEncoder.getVoltage()*360.0/5 - mAngleOffset) * Math.PI / 180);
+
+    }
+
     public SwerveModuleState getState() {
         return new SwerveModuleState(driveEncoder.getVelocity(), new Rotation2d(turnEncoder.getPosition()));
     }
 
     public void setState(SwerveModuleState state) {
         driveController.setReference(state.speedMetersPerSecond, ControlType.kVelocity);
-        turnController.setReference(state.angle.getRadians(), ControlType.kPosition);
+        
+        if (state.speedMetersPerSecond > 100) turnController.setReference(state.angle.getRadians(), ControlType.kPosition);
         putData();
     }
 
     public void putData() {
         SmartDashboard.putNumber("Abs Encoder " + TURN_ID + ":", absEncoder.getVoltage() * 360 / 5);
-        SmartDashboard.putNumber("Turn Encoder" + TURN_ID + ":", turnEncoder.getPosition());
+        SmartDashboard.putNumber("Turn Encoder" + TURN_ID + ":", turnEncoder.getPosition() * 180 / Math.PI);
     }
 
 }
