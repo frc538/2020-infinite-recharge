@@ -7,28 +7,14 @@
 
 package frc.robot.subsystem;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
-public class Shooter extends SubsystemBase {
-
-  private final CANSparkMax Shooter = new CANSparkMax(Constants.CAN_ID.SHOOTER, MotorType.kBrushless);
+public class ColorWheelSubsystem extends SubsystemBase {
   /**
-   * Creates a new Shooter.
+   * Creates a new ColorWheel.
    */
-  public Shooter() {
-    Shooter.setInverted(true);
-  }
+  public ColorWheelSubsystem() {
 
-  public void shoot(){
-    Shooter.set(1);
-  }
-
-  public void stop(){
-    Shooter.set(0);
   }
 
   @Override

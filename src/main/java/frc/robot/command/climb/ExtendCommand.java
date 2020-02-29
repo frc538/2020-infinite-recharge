@@ -5,25 +5,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.command.shooter;
+package frc.robot.command.climb;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystem.Shooter;
+import frc.robot.subsystem.ClimberSubsystem;
 
-public class Shoot extends CommandBase {
+public class ExtendCommand extends CommandBase {
 
-  private final Shooter mShooter;
-  private final boolean mShoot;
+  private final ClimberSubsystem mClimber;
+
   /**
-   * Creates a new Shoot.
+   * Creates a new Extend.
    */
-  public Shoot(Shooter shooter, boolean shoot) {
-
-    mShooter = shooter;
-    mShoot = shoot;
-
-    addRequirements(mShooter);
-    // Use addRequirements() here to declare subsystem dependencies.
+  public ExtendCommand(ClimberSubsystem climber) {
+    mClimber = climber;
+    addRequirements(mClimber);
   }
 
   // Called when the command is initially scheduled.
@@ -34,12 +30,7 @@ public class Shoot extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (mShoot){
-      mShooter.shoot();
-    } else {
-      mShooter.stop();
-    }
-
+    mClimber.extend();
   }
 
   // Called once the command ends or is interrupted.

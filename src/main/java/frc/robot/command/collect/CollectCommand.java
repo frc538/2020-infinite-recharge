@@ -5,24 +5,20 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.command.climb;
+package frc.robot.command.collect;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystem.Climber;
+import frc.robot.subsystem.CollectorSubsystem;
 
-public class Retract extends CommandBase {
-  
-  private final Climber mClimber;
+public class CollectCommand extends CommandBase {
+  private final CollectorSubsystem mCollector;
 
   /**
-   * Creates a new Retract.
+   * Creates a new Collect.
    */
-  public Retract(Climber climber) {
-
-    mClimber = climber;
-    addRequirements(mClimber);
-    
-    // Use addRequirements() here to declare subsystem dependencies.
+  public CollectCommand(CollectorSubsystem collector) {
+    mCollector = collector;
+    addRequirements(mCollector);
   }
 
   // Called when the command is initially scheduled.
@@ -33,8 +29,11 @@ public class Retract extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    mClimber.retract();
+    if (mCollector.isOn()) {
+      mCollector.stop();
+    } else {
+      mCollector.collect();
+    }
   }
 
   // Called once the command ends or is interrupted.

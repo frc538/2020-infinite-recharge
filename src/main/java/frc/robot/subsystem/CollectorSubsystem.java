@@ -7,40 +7,35 @@
 
 package frc.robot.subsystem;
 
-
-
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class BallCollector extends SubsystemBase {
+public class CollectorSubsystem extends SubsystemBase {
 
-  private final WPI_TalonSRX Collect = new WPI_TalonSRX(Constants.CAN_ID.COLLECT);
-
+  private final WPI_TalonSRX collector = new WPI_TalonSRX(Constants.CAN_ID.COLLECTOR);
   private boolean isOn = false;
 
   /**
    * Creates a new BallCollector.
    */
-  public BallCollector() {
+  public CollectorSubsystem() {
   }
 
-  public boolean isOn(){
+  public boolean isOn() {
     return isOn;
   }
 
-  public void collect(){
-
-    Collect.set(-0.75);
+  public void collect() {
+    collector.set(-0.75);
     isOn = true;
   }
 
-  public void stop(){
-    Collect.set(0);
+  public void stop() {
+    collector.set(0);
     isOn = false;
   }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
