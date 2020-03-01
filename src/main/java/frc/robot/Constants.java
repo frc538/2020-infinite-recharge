@@ -33,17 +33,20 @@ public final class Constants {
         public static final int COLLECTOR = 3;
         public static final int WINCH_RIGHT = 1;
         public static final int WINCH_LEFT = 2;
+        public static final int SPINNER = 4;
     }
 
     public static class PCM_ID {
         public static final int THICC_TUBE = 4;
         public static final int SMOL_TUBE = 5;
+        public static final int COLOR_RAISE_TUBE = 6;
     }
 
     public static class BUTTON_ID {
         public static final int SHOOTER = XboxController.Button.kA.value;
         public static final int COLLECTOR = XboxController.Button.kX.value;
         public static final int LIFT = XboxController.Button.kY.value;
+        public static final int COLOR_TOGGLE =  XboxController.Button.kB.value;
 
         public static final int KEY = 4;
         public static final int RED_BUTTON = 1;

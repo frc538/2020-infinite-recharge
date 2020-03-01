@@ -16,9 +16,11 @@ import frc.robot.command.climb.ExtendCommand;
 import frc.robot.command.climb.LiftCommand;
 import frc.robot.command.climb.RetractCommand;
 import frc.robot.command.collect.CollectCommand;
+import frc.robot.command.colorWheel.ToggleHeightCommand;
 import frc.robot.command.drive.DriveCommand;
 import frc.robot.command.shooter.ShootCommand;
 import frc.robot.subsystem.CollectorSubsystem;
+import frc.robot.subsystem.ColorWheelSubsystem;
 import frc.robot.subsystem.ClimberSubsystem;
 import frc.robot.subsystem.ShooterSubsystem;
 import frc.robot.subsystem.drive.DriveSubsystem;
@@ -37,8 +39,9 @@ public class RobotContainer {
   private final Joystick nukeButton = new Joystick(Constants.BUTTON_USB_ID);
   private final DriveSubsystem drive = new DriveSubsystem();
   private final ShooterSubsystem shooter = new ShooterSubsystem();
-  private final CollectorSubsystem collect = new CollectorSubsystem();
-  private final ClimberSubsystem climb = new ClimberSubsystem();
+  private final CollectorSubsystem collector = new CollectorSubsystem();
+  private final ClimberSubsystem climber = new ClimberSubsystem();
+  private final ColorWheelSubsystem colorWheel = new ColorWheelSubsystem();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -56,22 +59,27 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    JoystickButton Shoot = new JoystickButton(xbox, Constants.BUTTON_ID.SHOOTER);
-    Shoot.whenHeld(new ShootCommand(shooter, true));
-    Shoot.whenReleased(new ShootCommand(shooter, false));
+    JoystickButton shoot = new JoystickButton(xbox, Constants.BUTTON_ID.SHOOTER);
+    shoot.whenHeld(new ShootCommand(shooter, true));
+    shoot.whenReleased(new ShootCommand(shooter, false));
 
-    JoystickButton Collect = new JoystickButton(xbox, Constants.BUTTON_ID.COLLECTOR);
-    Collect.whenReleased(new CollectCommand(collect));
+    JoystickButton collect = new JoystickButton(xbox, Constants.BUTTON_ID.COLLECTOR);
+    collect.whenReleased(new CollectCommand(collector));
 
     JoystickButton key = new JoystickButton(nukeButton, Constants.BUTTON_ID.KEY);
     JoystickButton button = new JoystickButton(nukeButton, Constants.BUTTON_ID.RED_BUTTON);
 
-    key.and(button).whenActive(new ExtendCommand(climb));
-    key.whenInactive(new RetractCommand(climb));
+    key.and(button).whenActive(new ExtendCommand(climber));
+    key.whenInactive(new RetractCommand(climber));
 
     JoystickButton lift = new JoystickButton(xbox, Constants.BUTTON_ID.LIFT);
-    lift.whenHeld(new LiftCommand(climb, true));
-    lift.whenReleased(new LiftCommand(climb, false));
+    lift.whenHeld(new LiftCommand(climber, true));
+    lift.whenReleased(new LiftCommand(climber, false));
+
+    JoystickButton raiseColor = new JoystickButton(xbox, Constants.BUTTON_ID.COLOR_TOGGLE);
+    raiseColor.whenPressed(new ToggleHeightCommand(colorWheel));
+
+
   }
 
   /**
