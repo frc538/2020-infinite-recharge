@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.command.colorWheel;
+package frc.robot.command.colorwheel;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystem.ColorWheelSubsystem;
