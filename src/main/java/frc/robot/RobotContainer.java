@@ -16,8 +16,8 @@ import frc.robot.command.climb.ExtendCommand;
 import frc.robot.command.climb.LiftCommand;
 import frc.robot.command.climb.RetractCommand;
 import frc.robot.command.collect.CollectCommand;
-import frc.robot.command.colorWheel.ToggleHeightCommand;
-import frc.robot.command.colorWheel.ToggleSpinCommand;
+import frc.robot.command.colorwheel.ToggleHeightCommand;
+import frc.robot.command.colorwheel.ToggleSpinCommand;
 import frc.robot.command.drive.DriveCommand;
 import frc.robot.command.shooter.ShootCommand;
 import frc.robot.subsystem.CollectorSubsystem;
@@ -84,7 +84,6 @@ public class RobotContainer {
     JoystickButton stageTwo = new JoystickButton(xbox, Constants.BUTTON_ID.STAGE_TWO);
     stageOne.whenPressed(new ToggleSpinCommand(colorWheel));
     stageTwo.whenPressed(new ToggleSpinCommand(colorWheel));
-
 
   }
 

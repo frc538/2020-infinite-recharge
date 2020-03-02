@@ -49,7 +49,7 @@ public final class Constants {
         public static final int SHOOTER = XboxController.Button.kA.value;
         public static final int COLLECTOR = XboxController.Button.kX.value;
         public static final int LIFT = XboxController.Button.kY.value;
-        public static final int COLOR_TOGGLE =  XboxController.Button.kB.value;
+        public static final int COLOR_TOGGLE = XboxController.Button.kB.value;
 
         public static final int STAGE_ONE = XboxController.Button.kBumperLeft.value;
         public static final int STAGE_TWO = XboxController.Button.kBumperRight.value;
@@ -59,12 +59,12 @@ public final class Constants {
     }
 
     public static class COLORS {
-        
+
         public static final Color BLUE = ColorMatch.makeColor(0.143, 0.427, 0.429);
         public static final Color GREEN = ColorMatch.makeColor(0.197, 0.561, 0.240);
         public static final Color RED = ColorMatch.makeColor(0.561, 0.232, 0.114);
         public static final Color YELLOW = ColorMatch.makeColor(0.361, 0.524, 0.113);
-        
+
     }
 
     public static final int FRONT_LEFT_ABS_ENCODER_ID = 1;
