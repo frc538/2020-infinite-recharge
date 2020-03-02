@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Utilities;
 
-
 /**
  * Add your docs here.
  */
@@ -37,11 +36,10 @@ public class SwerveModule {
 
     public final int TURN_ID;
 
-
     public SwerveModule(int driveId, int turnId, int absEncId, double angleOffset) {
 
         mAngleOffset = angleOffset;
-        
+
         drive = new CANSparkMax(driveId, MotorType.kBrushless);
         turn = new CANSparkMax(turnId, MotorType.kBrushless);
 
@@ -49,14 +47,14 @@ public class SwerveModule {
 
         drive.restoreFactoryDefaults();
         turn.restoreFactoryDefaults();
-        
+
         driveEncoder = drive.getEncoder();
-        driveEncoder.setVelocityConversionFactor(Math.PI*WHEEL_RADIUS/30);
+        driveEncoder.setVelocityConversionFactor(Math.PI * WHEEL_RADIUS / 30);
         absEncoder = new AnalogInput(absEncId);
 
         turnEncoder = turn.getEncoder();
         turnEncoder.setPositionConversionFactor(2 * Math.PI / 18);
-        turnEncoder.setPosition((absEncoder.getVoltage()*360.0/5 - angleOffset) * Math.PI / 180);
+        turnEncoder.setPosition((absEncoder.getVoltage() * 360.0 / 5 - angleOffset) * Math.PI / 180);
 
         driveController = new CANPIDController(drive);
         turnController = new CANPIDController(turn);
@@ -67,9 +65,9 @@ public class SwerveModule {
         turnController.setP(0.08);
     }
 
-    public void init(){
-     
-        turnEncoder.setPosition((absEncoder.getVoltage()*360.0/5 - mAngleOffset) * Math.PI / 180);
+    public void init() {
+
+        turnEncoder.setPosition((absEncoder.getVoltage() * 360.0 / 5 - mAngleOffset) * Math.PI / 180);
 
     }
 
@@ -79,8 +77,13 @@ public class SwerveModule {
 
     public void setState(SwerveModuleState state) {
         driveController.setReference(state.speedMetersPerSecond, ControlType.kVelocity);
-        
-        if (state.speedMetersPerSecond > 100) turnController.setReference(state.angle.getRadians(), ControlType.kPosition);
+
+        if (state.speedMetersPerSecond > 100) {
+
+            turnController.setReference(
+                    state.angle.getRadians() >= Math.PI ? state.angle.getRadians() - Math.PI : state.angle.getRadians(),
+                    ControlType.kPosition);
+        }
         putData();
     }
 
