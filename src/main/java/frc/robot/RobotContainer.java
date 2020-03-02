@@ -17,6 +17,7 @@ import frc.robot.command.climb.LiftCommand;
 import frc.robot.command.climb.RetractCommand;
 import frc.robot.command.collect.CollectCommand;
 import frc.robot.command.colorWheel.ToggleHeightCommand;
+import frc.robot.command.colorWheel.ToggleSpinCommand;
 import frc.robot.command.drive.DriveCommand;
 import frc.robot.command.shooter.ShootCommand;
 import frc.robot.subsystem.CollectorSubsystem;
@@ -78,6 +79,11 @@ public class RobotContainer {
 
     JoystickButton raiseColor = new JoystickButton(xbox, Constants.BUTTON_ID.COLOR_TOGGLE);
     raiseColor.whenPressed(new ToggleHeightCommand(colorWheel));
+
+    JoystickButton stageOne = new JoystickButton(xbox, Constants.BUTTON_ID.STAGE_ONE);
+    JoystickButton stageTwo = new JoystickButton(xbox, Constants.BUTTON_ID.STAGE_TWO);
+    stageOne.whenPressed(new ToggleSpinCommand(colorWheel));
+    stageTwo.whenPressed(new ToggleSpinCommand(colorWheel));
 
 
   }
