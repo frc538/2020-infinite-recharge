@@ -33,7 +33,7 @@ public class DriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mDrive.drive(mJoystick.getY(), -mJoystick.getX(), mJoystick.getZ());
+    mDrive.drive(mJoystick.getY(), -mJoystick.getX(), -mJoystick.getZ());
   }
 
   // Called once the command ends or is interrupted.
