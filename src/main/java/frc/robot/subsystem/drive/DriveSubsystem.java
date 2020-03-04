@@ -7,6 +7,7 @@
 
 package frc.robot.subsystem.drive;
 
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
@@ -17,25 +18,21 @@ import frc.robot.Utilities;
 
 public class DriveSubsystem extends SubsystemBase {
 
-        private final double shooterY = Utilities.inchesToMeters(-9.248);
+        private final double shooterX = Utilities.inchesToMeters(-9.248);
 
-        private final Translation2d frontLeftLocation = new Translation2d(Utilities.inchesToMeters(-10),
-                        Utilities.inchesToMeters(-4.405) - shooterY);
-        private final Translation2d frontRightLocation = new Translation2d(Utilities.inchesToMeters(10),
-                        Utilities.inchesToMeters(-4.405) - shooterY);
-        private final Translation2d rearLeftLocation = new Translation2d(Utilities.inchesToMeters(-10),
-                        Utilities.inchesToMeters(-27.905) - shooterY);
-        private final Translation2d rearRightLocation = new Translation2d(Utilities.inchesToMeters(10),
-                        Utilities.inchesToMeters(-27.905) - shooterY);
+        private final Translation2d frontLeftLocation = new Translation2d(Utilities.inchesToMeters(-4.405) - shooterX, Utilities.inchesToMeters(-10));
+        private final Translation2d frontRightLocation = new Translation2d (Utilities.inchesToMeters(-4.405) - shooterX, Utilities.inchesToMeters(10));
+        private final Translation2d rearLeftLocation = new Translation2d(Utilities.inchesToMeters(-27.905) - shooterX, Utilities.inchesToMeters(-10));
+        private final Translation2d rearRightLocation = new Translation2d(Utilities.inchesToMeters(-27.905) - shooterX, Utilities.inchesToMeters(10));
 
         private final SwerveModule frontLeftModule = new SwerveModule(Constants.CAN_ID.FRONT_LEFT_DRIVE,
-                        Constants.CAN_ID.FRONT_LEFT_TURN, Constants.FRONT_LEFT_ABS_ENCODER_ID, 201.796854);
+                        Constants.CAN_ID.FRONT_LEFT_TURN, Constants.FRONT_LEFT_ABS_ENCODER_ID, Rotation2d.fromDegrees(278.437398));
         private final SwerveModule frontRightModule = new SwerveModule(Constants.CAN_ID.FRONT_RIGHT_DRIVE,
-                        Constants.CAN_ID.FRONT_RIGHT_TURN, Constants.FRONT_RIGHT_ABS_ENCODER_ID, 277.031222);
+                        Constants.CAN_ID.FRONT_RIGHT_TURN, Constants.FRONT_RIGHT_ABS_ENCODER_ID, Rotation2d.fromDegrees(292.851422));
         private final SwerveModule rearLeftModule = new SwerveModule(Constants.CAN_ID.REAR_LEFT_DRIVE,
-                        Constants.CAN_ID.REAR_LEFT_TURN, Constants.REAR_LEFT_ABS_ENCODER_ID, 211.816385);
+                        Constants.CAN_ID.REAR_LEFT_TURN, Constants.REAR_LEFT_ABS_ENCODER_ID, Rotation2d.fromDegrees(341.279188));
         private final SwerveModule rearRightModule = new SwerveModule(Constants.CAN_ID.REAR_RIGHT_DRIVE,
-                        Constants.CAN_ID.REAR_RIGHT_TURN, Constants.REAR_RIGHT_ABS_ENCODER_ID, 117.597644);
+                        Constants.CAN_ID.REAR_RIGHT_TURN, Constants.REAR_RIGHT_ABS_ENCODER_ID, Rotation2d.fromDegrees(234.580017));
 
         private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(frontLeftLocation,
                         frontRightLocation, rearLeftLocation, rearRightLocation);
@@ -54,12 +51,14 @@ public class DriveSubsystem extends SubsystemBase {
                 frontLeftModule.init();
                 frontRightModule.init();
 
+
+
         }
 
         public void drive(double xSpeed, double ySpeed, double yawSpeed) {
                 xSpeed *= 1000;
                 ySpeed *= 1000;
-                SwerveModuleState[] states = kinematics.toSwerveModuleStates(new ChassisSpeeds(-xSpeed, ySpeed, 0));
+                SwerveModuleState[] states = kinematics.toSwerveModuleStates(new ChassisSpeeds(-xSpeed, ySpeed, yawSpeed));
                 // SwerveDriveKinematics.normalizeWheelSpeeds(states, 20);
                 frontLeftModule.putData();
                 frontRightModule.putData();

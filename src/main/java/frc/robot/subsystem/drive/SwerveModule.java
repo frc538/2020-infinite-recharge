@@ -13,6 +13,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
@@ -29,14 +30,14 @@ public class SwerveModule {
     private final CANSparkMax turn;
     private final CANEncoder driveEncoder;
     private final CANEncoder turnEncoder;
-    private final AnalogInput absEncoder;
+    private final AnalogEncoder absEncoder;
     private final CANPIDController driveController;
     private final CANPIDController turnController;
-    private final double mAngleOffset;
+    private final Rotation2d mAngleOffset;
 
     public final int TURN_ID;
 
-    public SwerveModule(int driveId, int turnId, int absEncId, double angleOffset) {
+    public SwerveModule(int driveId, int turnId, int absEncId, Rotation2d angleOffset) {
 
         mAngleOffset = angleOffset;
 
@@ -50,12 +51,15 @@ public class SwerveModule {
 
         driveEncoder = drive.getEncoder();
         driveEncoder.setVelocityConversionFactor(Math.PI * WHEEL_RADIUS / 30);
-        absEncoder = new AnalogInput(absEncId);
+        absEncoder = new AnalogEncoder(new AnalogInput(absEncId));
+        // absEncoder.reset();
+        absEncoder.setDistancePerRotation(2*Math.PI);
 
         turnEncoder = turn.getEncoder();
         turnEncoder.setPositionConversionFactor(2 * Math.PI / 18);
-        turnEncoder.setPosition((absEncoder.getVoltage() * 360.0 / 5 - angleOffset) * Math.PI / 180);
 
+        init();
+    
         driveController = new CANPIDController(drive);
         turnController = new CANPIDController(turn);
 
@@ -67,8 +71,9 @@ public class SwerveModule {
 
     public void init() {
 
-        turnEncoder.setPosition((absEncoder.getVoltage() * 360.0 / 5 - mAngleOffset) * Math.PI / 180);
-
+        // absEncoder.reset();
+        turnEncoder.setPosition((absEncoder.getDistance() - mAngleOffset.getRadians())  % (2 * Math.PI));
+        
     }
 
     public SwerveModuleState getState() {
@@ -78,17 +83,12 @@ public class SwerveModule {
     public void setState(SwerveModuleState state) {
         driveController.setReference(state.speedMetersPerSecond, ControlType.kVelocity);
 
-        if (state.speedMetersPerSecond > 100) {
-
-            turnController.setReference(
-                    state.angle.getRadians() >= Math.PI ? state.angle.getRadians() - Math.PI : state.angle.getRadians(),
-                    ControlType.kPosition);
-        }
+        turnController.setReference(state.angle.getRadians(), ControlType.kPosition);
         putData();
     }
 
     public void putData() {
-        SmartDashboard.putNumber("Abs Encoder " + TURN_ID + ":", absEncoder.getVoltage() * 360 / 5);
+        SmartDashboard.putNumber("Abs Encoder " + TURN_ID + ":", (absEncoder.getDistance() % (2 * Math.PI)) * 180 / Math.PI );
         SmartDashboard.putNumber("Turn Encoder" + TURN_ID + ":", turnEncoder.getPosition() * 180 / Math.PI);
     }
 
