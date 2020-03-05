@@ -97,8 +97,7 @@ public class RobotContainer {
     return null;
   }
 
-  public void init() {
-
-    drive.init();
+  public void initialize() {
+    drive.initialize();
   }
 }
