@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ColorWheelSubsystem extends SubsystemBase {
+  private final double MAX_SPEED = 0.25;
+  private final int PROXIMITY_THRESHOLD = 180;
 
   private final Solenoid raiser = new Solenoid(Constants.PCM_ID.COLOR_RAISE_TUBE);
   private final WPI_TalonSRX spinner = new WPI_TalonSRX(Constants.CAN_ID.SPINNER);
@@ -48,9 +50,9 @@ public class ColorWheelSubsystem extends SubsystemBase {
   }
 
   public void lower() {
-
-    raiser.set(false);
-
+    if (colorSensor.getProximity() < PROXIMITY_THRESHOLD) {
+      raiser.set(false);
+    }
   }
 
   public void toggle() {
@@ -63,7 +65,7 @@ public class ColorWheelSubsystem extends SubsystemBase {
 
   public void spin() {
 
-    spinner.set(.5);
+    spinner.set(MAX_SPEED);
 
   }
 
@@ -75,7 +77,7 @@ public class ColorWheelSubsystem extends SubsystemBase {
 
   public void toggleSpin() {
 
-    if (Math.abs(spinner.get()) <= 0.25) {
+    if (Math.abs(spinner.get()) <= MAX_SPEED / 2) {
       spin();
     } else {
       stopSpin();
@@ -156,23 +158,33 @@ public class ColorWheelSubsystem extends SubsystemBase {
   }
 
   public void report() {
-    Color result = getColor();
+    String currentColor = colorToString(getColor());
+    String fmsColor = colorToString(mFMSColor);
+    String colorToSense = colorToString(sensedColor());
+    String fmsData = DriverStation.getInstance().getGameSpecificMessage();
+    
+    SmartDashboard.putString("Current Color", currentColor);
+    SmartDashboard.putString("FMS Color Retrieved", fmsColor);
+    SmartDashboard.putString("Color To Sense", colorToSense);
+    SmartDashboard.putString("FMS Data", fmsData);
+    SmartDashboard.putNumber("Color Count ", count);
+    SmartDashboard.putNumber("Distance", colorSensor.getProximity());
+  }
 
-    String textString = "No Detection";
+  private String colorToString(Color color) {
+    String textString = "No Color";
 
-    if (result == Constants.COLORS.BLUE) {
+    if (color == Constants.COLORS.BLUE) {
       textString = "Blue";
-    } else if (result == Constants.COLORS.GREEN) {
+    } else if (color == Constants.COLORS.GREEN) {
       textString = "Green";
-    } else if (result == Constants.COLORS.RED) {
+    } else if (color == Constants.COLORS.RED) {
       textString = "Red";
-    } else if (result == Constants.COLORS.YELLOW) {
+    } else if (color == Constants.COLORS.YELLOW) {
       textString = "Yellow";
     }
 
-    SmartDashboard.putString("Color", textString);
-    SmartDashboard.putNumber("Color Count ", count);
-
+    return textString;
   }
 
   public int getCount() {
