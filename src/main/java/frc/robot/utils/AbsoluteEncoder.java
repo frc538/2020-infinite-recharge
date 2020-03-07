@@ -24,7 +24,7 @@ public class AbsoluteEncoder {
     private final AnalogInput mInput;
     private final double mScale;
 
-    private final List<Double> voltages = new ArrayList();
+    private final List<Double> voltages = new ArrayList<>();
 
     private AbsoluteEncoder(AnalogInput input, double scale) {
         
