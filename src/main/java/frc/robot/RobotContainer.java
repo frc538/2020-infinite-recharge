@@ -11,11 +11,15 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.command.climb.ExtendCommand;
 import frc.robot.command.climb.LiftCommand;
 import frc.robot.command.climb.RetractCommand;
 import frc.robot.command.collect.CollectCommand;
+import frc.robot.command.colorwheel.CountColorCommand;
+import frc.robot.command.colorwheel.ReadColorCommand;
+import frc.robot.command.colorwheel.ResetColorCommand;
 import frc.robot.command.colorwheel.ToggleHeightCommand;
 import frc.robot.command.colorwheel.ToggleSpinCommand;
 import frc.robot.command.drive.DriveCommand;
@@ -81,9 +85,14 @@ public class RobotContainer {
     raiseColor.whenPressed(new ToggleHeightCommand(colorWheel));
 
     JoystickButton stageOne = new JoystickButton(xbox, Constants.BUTTON_ID.STAGE_ONE);
+    stageOne.whenReleased(new ResetColorCommand(colorWheel)
+        .andThen(new ParallelCommandGroup(new ToggleSpinCommand(colorWheel), new CountColorCommand(colorWheel, 28)))
+        .andThen(new ToggleSpinCommand(colorWheel)));
+
     JoystickButton stageTwo = new JoystickButton(xbox, Constants.BUTTON_ID.STAGE_TWO);
-    stageOne.whenPressed(new ToggleSpinCommand(colorWheel));
-    stageTwo.whenPressed(new ToggleSpinCommand(colorWheel));
+    stageTwo.whenReleased(new ResetColorCommand(colorWheel)
+        .andThen(new ParallelCommandGroup(new ToggleSpinCommand(colorWheel), new ReadColorCommand(colorWheel)))
+        .andThen(new ToggleSpinCommand(colorWheel)));
 
   }
 

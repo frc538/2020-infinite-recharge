@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,6 +27,7 @@ public class ColorWheelSubsystem extends SubsystemBase {
   private final ColorMatch colorMatch = new ColorMatch();
   private Color prevColor = null;
   private int count = 0;
+  private Color mFMSColor = null;
 
   /**
    * Creates a new ColorWheel.
@@ -94,6 +96,57 @@ public class ColorWheelSubsystem extends SubsystemBase {
 
   }
 
+  private Color getFMSColor(){
+
+    String gameData = DriverStation.getInstance().getGameSpecificMessage();
+
+    if(gameData.isEmpty()){
+      return null;
+    }
+
+    Color value = null;
+
+    switch (gameData.charAt(0)){
+
+      case 'R' : 
+        value = Constants.COLORS.RED;
+        break;
+
+      case 'G' :
+        value = Constants.COLORS.GREEN;
+        break;
+      
+      case 'B' :
+        value = Constants.COLORS.BLUE;
+        break;
+      
+      case 'Y' :
+        value = Constants.COLORS.YELLOW;
+        break;
+    }
+
+    return value;
+
+  }
+
+  public Color sensedColor(){
+
+    Color retVal = null;
+
+    if(mFMSColor == Constants.COLORS.RED){
+      retVal = Constants.COLORS.BLUE;
+    } else if(mFMSColor == Constants.COLORS.BLUE) {
+      retVal = Constants.COLORS.RED;
+    } else if(mFMSColor == Constants.COLORS.YELLOW) {
+      retVal = Constants.COLORS.GREEN;
+    } else if(mFMSColor == Constants.COLORS.GREEN) {
+      retVal = Constants.COLORS.YELLOW;
+    }
+
+    return retVal; 
+
+  }
+
   public void countColor() {
     Color result = getColor();
     if (result != prevColor) {
@@ -122,8 +175,19 @@ public class ColorWheelSubsystem extends SubsystemBase {
 
   }
 
+  public int getCount() {
+    return count;
+  }
+
   @Override
   public void periodic() {
+    
+    Color fMSColor = getFMSColor();
+
+    if(fMSColor != null && fMSColor != mFMSColor) {
+      mFMSColor = fMSColor;
+    }
+    
     report();
 
     // This method will be called once per scheduler run
