@@ -20,10 +20,10 @@ import frc.robot.Utilities;
 public class DriveSubsystem extends SubsystemBase {
 
   private final double shooterX = Utilities.inchesToMeters(-9.248);
-  private final Translation2d frontLeftLocation = new Translation2d(Utilities.inchesToMeters(-4.405) - shooterX, Utilities.inchesToMeters(-10));
-  private final Translation2d frontRightLocation = new Translation2d(Utilities.inchesToMeters(-4.405) - shooterX, Utilities.inchesToMeters(10));
-  private final Translation2d rearLeftLocation = new Translation2d(Utilities.inchesToMeters(-27.905) - shooterX, Utilities.inchesToMeters(-10));
-  private final Translation2d rearRightLocation = new Translation2d(Utilities.inchesToMeters(-27.905) - shooterX, Utilities.inchesToMeters(10));
+  private final Translation2d frontLeftLocation = new Translation2d(Utilities.inchesToMeters(12), Utilities.inchesToMeters(-10.25));
+  private final Translation2d frontRightLocation = new Translation2d(Utilities.inchesToMeters(12), Utilities.inchesToMeters(10.25));
+  private final Translation2d rearLeftLocation = new Translation2d(Utilities.inchesToMeters(-12), Utilities.inchesToMeters(-10.25));
+  private final Translation2d rearRightLocation = new Translation2d(Utilities.inchesToMeters(-12), Utilities.inchesToMeters(10.25));
 
   private final SwerveModule frontLeftModule = new SwerveModule(Constants.CAN_ID.FRONT_LEFT_DRIVE,
       Constants.CAN_ID.FRONT_LEFT_TURN, Constants.FRONT_LEFT_ABS_ENCODER_ID, new Rotation2d(1.464952));
@@ -56,13 +56,16 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   private double angularSpeed(double unitRate) {
-    return Math.pow(unitRate, 3.0) * Math.PI;
+    return Math.pow(unitRate, 3.0) * 2 * Math.PI;
   }
 
   public void drive(double forwardRate, double rightRate, double rotationRate) {
     SmartDashboard.putNumber("Forward", forwardRate);
     SmartDashboard.putNumber("Right", rightRate);
     SmartDashboard.putNumber("Rotation", rotationRate);
+
+
+  
 
     SwerveModuleState[] states = kinematics.toSwerveModuleStates(
         new ChassisSpeeds(linearSpeed(forwardRate), linearSpeed(rightRate), angularSpeed(rotationRate)));

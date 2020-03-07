@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import frc.robot.Utilities;
+import frc.robot.utils.AbsoluteEncoder;
 
 public class SwerveModule {
   private static final double STEERING_RATIO = 18;
@@ -45,7 +46,7 @@ public class SwerveModule {
   private final CANEncoder turnEncoder;
   private final CANPIDController driveController;
   private final CANPIDController turnController;
-  private final AnalogEncoder absEncoder;
+  private final AbsoluteEncoder absEncoder;
 
   @SuppressWarnings("unused")
   private final Rotation2d mAngleOffset;
@@ -59,7 +60,6 @@ public class SwerveModule {
     drive.restoreFactoryDefaults();
     turn.restoreFactoryDefaults();
 
-    drive.setInverted(true);
 
     driveEncoder = drive.getEncoder();
     turnEncoder = turn.getEncoder();
@@ -67,8 +67,7 @@ public class SwerveModule {
     driveEncoder.setVelocityConversionFactor(DRIVE_VELOCITY_CONVERSION_FACTOR);
     turnEncoder.setPositionConversionFactor(STEER_POSITION_CONVERSION_FACTOR);
 
-    absEncoder = new AnalogEncoder(new AnalogInput(absEncId));
-    absEncoder.setDistancePerRotation(RADIANS_PER_ROTATION);
+    absEncoder = new AbsoluteEncoder(new AnalogInput(absEncId));
 
     initializeTurnEncoder();
 
@@ -99,9 +98,9 @@ public class SwerveModule {
     double angleRadians = state.angle.getRadians();
     double speedMs = state.speedMetersPerSecond;
 
-    if (angleRadians < 0) {
-      angleRadians += 2*Math.PI;
-    }
+    // if (angleRadians < 0) {
+    //   angleRadians += 2*Math.PI;
+    // }
 
     SwerveModuleState current = getState();
     Rotation2d deltaAngle = Rotation2d.fromDegrees(state.angle.getDegrees() - current.angle.getDegrees());
