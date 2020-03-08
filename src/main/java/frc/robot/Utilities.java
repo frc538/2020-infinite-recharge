@@ -5,20 +5,13 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.subsystems;
+package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-public class ExampleSubsystem extends SubsystemBase {
-  /**
-   * Creates a new ExampleSubsystem.
-   */
-  public ExampleSubsystem() {
-
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+/**
+ * Add your docs here.
+ */
+public class Utilities {
+  public static double inchesToMeters(double inches) {
+    return inches * 2.54 / 100;
   }
 }
