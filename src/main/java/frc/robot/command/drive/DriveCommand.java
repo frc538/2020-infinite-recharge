@@ -14,6 +14,7 @@ import frc.robot.subsystem.drive.DriveSubsystem;
 public class DriveCommand extends CommandBase {
   private final DriveSubsystem mDrive;
   private final Joystick mJoystick;
+  private final double SMALL_BAND_DEGREES = 5;
 
   /**
    * Creates a new DriveCommand.
@@ -33,8 +34,33 @@ public class DriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // I think these are right or wrong.
-    mDrive.drive(mJoystick.getY(), mJoystick.getX(), mJoystick.getZ());
+    double joystickForward = -mJoystick.getY();
+    double joystickRight = mJoystick.getX();
+
+    double degrees = mJoystick.getDirectionDegrees();
+    double magnitude = mJoystick.getMagnitude();
+
+    if (degrees >= 180 - (SMALL_BAND_DEGREES) || degrees <= -180 + (SMALL_BAND_DEGREES)) {
+      // BACK
+      joystickForward = -magnitude;
+      joystickRight = 0;
+    } else if (degrees <= -90 + (SMALL_BAND_DEGREES / 2) && degrees >= -90 - (SMALL_BAND_DEGREES / 2)) {
+      // LEFT
+      joystickForward = 0;
+      joystickRight = -magnitude;
+    } else if  (degrees >= -(SMALL_BAND_DEGREES / 2) && degrees <= (SMALL_BAND_DEGREES / 2)) {
+      // FORWARD
+      joystickForward = magnitude;
+      joystickRight = 0;
+    } else if (degrees >= 90 - (SMALL_BAND_DEGREES / 2) && degrees <= 90 + (SMALL_BAND_DEGREES / 2)) {
+      // RIGHT
+      joystickForward = 0;
+      joystickRight = magnitude;
+    }
+
+
+
+    mDrive.drive(joystickForward, joystickRight, mJoystick.getZ());
   }
 
   // Called once the command ends or is interrupted.

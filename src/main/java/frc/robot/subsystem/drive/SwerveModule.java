@@ -13,10 +13,10 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Utilities;
 import frc.robot.utils.AbsoluteEncoder;
 
@@ -48,11 +48,14 @@ public class SwerveModule {
   private final CANPIDController turnController;
   private final AbsoluteEncoder absEncoder;
 
-  @SuppressWarnings("unused")
+  private final int TURN_ID;
+
   private final Rotation2d mAngleOffset;
 
   public SwerveModule(int driveId, int turnId, int absEncId, Rotation2d angleOffset) {
     mAngleOffset = angleOffset;
+
+    TURN_ID = turnId;
 
     drive = new CANSparkMax(driveId, MotorType.kBrushless);
     turn = new CANSparkMax(turnId, MotorType.kBrushless);
@@ -74,7 +77,7 @@ public class SwerveModule {
     driveController = new CANPIDController(drive);
     turnController = new CANPIDController(turn);
 
-    turnController.setOutputRange(-0.5, 0.5);
+    turnController.setOutputRange(-0.75, 0.75);
 
     driveController.setP(0.0001);
     driveController.setFF(0.000171);
@@ -83,11 +86,7 @@ public class SwerveModule {
   }
 
   public void initializeTurnEncoder() {
-      // Make sure wheels are aligned properly.
-
-      turnEncoder.setPosition(0);
-      // If the absolute encoders aren't jacked up, do this.
-      // turnEncoder.setPosition((absEncoder.getDistance() - mAngleOffset.getRadians()) % RADIANS_PER_ROTATION);
+    turnEncoder.setPosition((absEncoder.getAngle().getRadians() - mAngleOffset.getRadians()) % RADIANS_PER_ROTATION);
   }
 
   public SwerveModuleState getState() {
@@ -95,21 +94,14 @@ public class SwerveModule {
   }
 
   public void setState(SwerveModuleState state) {
-    double angleRadians = state.angle.getRadians();
+    double angleRadians = -state.angle.getRadians();
     double speedMs = state.speedMetersPerSecond;
 
-    // if (angleRadians < 0) {
-    //   angleRadians += 2*Math.PI;
-    // }
+    SmartDashboard.putNumber("Set Turn " + TURN_ID + " to ", (angleRadians) * 180 / Math.PI);
+    SmartDashboard.putNumber("Current Turn " + TURN_ID , turnEncoder.getPosition() * 180 / Math.PI);
+    SmartDashboard.putNumber("ABS ENC " + TURN_ID, absEncoder.getAngle().getDegrees());
 
-    SwerveModuleState current = getState();
-    Rotation2d deltaAngle = Rotation2d.fromDegrees(state.angle.getDegrees() - current.angle.getDegrees());
-    if (Math.abs(deltaAngle.getDegrees()) > 90 && Math.abs(deltaAngle.getDegrees()) < 270) {
-      angleRadians = state.angle.plus(Rotation2d.fromDegrees(180)).getRadians();
-      speedMs = -state.speedMetersPerSecond;
-    }
-
-    driveController.setReference(speedMs / DRIVE_VELOCITY_CONVERSION_FACTOR, ControlType.kVelocity);
     turnController.setReference(angleRadians, ControlType.kPosition);
+    driveController.setReference(speedMs / DRIVE_VELOCITY_CONVERSION_FACTOR, ControlType.kVelocity);
   }
 }

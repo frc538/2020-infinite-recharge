@@ -12,30 +12,28 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Utilities;
 
 public class DriveSubsystem extends SubsystemBase {
 
-  private final double shooterX = Utilities.inchesToMeters(-9.248);
-  private final Translation2d frontLeftLocation = new Translation2d(Utilities.inchesToMeters(12), Utilities.inchesToMeters(-10.25));
-  private final Translation2d frontRightLocation = new Translation2d(Utilities.inchesToMeters(12), Utilities.inchesToMeters(10.25));
-  private final Translation2d rearLeftLocation = new Translation2d(Utilities.inchesToMeters(-12), Utilities.inchesToMeters(-10.25));
-  private final Translation2d rearRightLocation = new Translation2d(Utilities.inchesToMeters(-12), Utilities.inchesToMeters(10.25));
+  private final Translation2d frontLeftLocation = new Translation2d(Utilities.inchesToMeters(12), Utilities.inchesToMeters(10.25));
+  private final Translation2d frontRightLocation = new Translation2d(Utilities.inchesToMeters(12), Utilities.inchesToMeters(-10.25));
+  private final Translation2d rearLeftLocation = new Translation2d(Utilities.inchesToMeters(-12), Utilities.inchesToMeters(10.25));
+  private final Translation2d rearRightLocation = new Translation2d(Utilities.inchesToMeters(-12), Utilities.inchesToMeters(-10.25));
 
   private final SwerveModule frontLeftModule = new SwerveModule(Constants.CAN_ID.FRONT_LEFT_DRIVE,
-      Constants.CAN_ID.FRONT_LEFT_TURN, Constants.FRONT_LEFT_ABS_ENCODER_ID, new Rotation2d(1.464952));
+      Constants.CAN_ID.FRONT_LEFT_TURN, Constants.FRONT_LEFT_ABS_ENCODER_ID, Rotation2d.fromDegrees(239.633765));
   private final SwerveModule frontRightModule = new SwerveModule(Constants.CAN_ID.FRONT_RIGHT_DRIVE,
-      Constants.CAN_ID.FRONT_RIGHT_TURN, Constants.FRONT_RIGHT_ABS_ENCODER_ID, new Rotation2d(7.976699));
+      Constants.CAN_ID.FRONT_RIGHT_TURN, Constants.FRONT_RIGHT_ABS_ENCODER_ID, Rotation2d.fromDegrees(275.350314));
   private final SwerveModule rearLeftModule = new SwerveModule(Constants.CAN_ID.REAR_LEFT_DRIVE,
-      Constants.CAN_ID.REAR_LEFT_TURN, Constants.REAR_LEFT_ABS_ENCODER_ID, new Rotation2d(3.198350));
+      Constants.CAN_ID.REAR_LEFT_TURN, Constants.REAR_LEFT_ABS_ENCODER_ID, Rotation2d.fromDegrees(217.792946));
   private final SwerveModule rearRightModule = new SwerveModule(Constants.CAN_ID.REAR_RIGHT_DRIVE,
-      Constants.CAN_ID.REAR_RIGHT_TURN, Constants.REAR_RIGHT_ABS_ENCODER_ID, new Rotation2d(4.532913));
+      Constants.CAN_ID.REAR_RIGHT_TURN, Constants.REAR_RIGHT_ABS_ENCODER_ID, Rotation2d.fromDegrees(231.020484));
 
   private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(frontLeftLocation, frontRightLocation,
-      rearLeftLocation, rearRightLocation);
+      rearRightLocation, rearLeftLocation);
 
   /**
    * Creates a new SwerveDriveSubsystem.
@@ -60,21 +58,14 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void drive(double forwardRate, double rightRate, double rotationRate) {
-    SmartDashboard.putNumber("Forward", forwardRate);
-    SmartDashboard.putNumber("Right", rightRate);
-    SmartDashboard.putNumber("Rotation", rotationRate);
-
-
-  
-
     SwerveModuleState[] states = kinematics.toSwerveModuleStates(
         new ChassisSpeeds(linearSpeed(forwardRate), linearSpeed(rightRate), angularSpeed(rotationRate)));
-    SwerveDriveKinematics.normalizeWheelSpeeds(states, SwerveModule.MAX_SPEED_METERS_PER_SECOND);
 
-    frontLeftModule.setState(states[0]);
-    frontRightModule.setState(states[1]);
-    rearLeftModule.setState(states[2]);
+    SwerveDriveKinematics.normalizeWheelSpeeds(states, SwerveModule.MAX_SPEED_METERS_PER_SECOND);
+    frontLeftModule.setState(states[1]);
+    frontRightModule.setState(states[0]);
     rearRightModule.setState(states[3]);
+    rearLeftModule.setState(states[2]);
   }
 
   @Override
