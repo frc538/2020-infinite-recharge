@@ -87,7 +87,8 @@ public class SwerveModule {
   }
 
   public void initializeTurnEncoder() {
-    turnEncoder.setPosition((absEncoder.getAngle().getRadians() - mAngleOffset.getRadians()) % RADIANS_PER_ROTATION);
+    double absConversion = (-absEncoder.getAngle().getRadians() + mAngleOffset.getRadians()) + RADIANS_PER_ROTATION;
+    turnEncoder.setPosition(absConversion % RADIANS_PER_ROTATION);
   }
 
   public SwerveModuleState getState() {
@@ -97,6 +98,10 @@ public class SwerveModule {
   public void setState(SwerveModuleState state) {
     double angleRadians = state.angle.getRadians();
     double speedMs = state.speedMetersPerSecond;
+
+    // if(angleRadians < -Math.PI) {
+    //   angleRadians +=  RADIANS_PER_ROTATION;
+    // }
 
     SmartDashboard.putNumber("Set Turn " + TURN_ID + " to ", (angleRadians) * 180 / Math.PI);
     SmartDashboard.putNumber("Current Turn " + TURN_ID , turnEncoder.getPosition() * 180 / Math.PI);
