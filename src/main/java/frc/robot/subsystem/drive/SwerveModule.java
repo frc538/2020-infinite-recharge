@@ -62,6 +62,7 @@ public class SwerveModule {
 
     drive.restoreFactoryDefaults();
     turn.restoreFactoryDefaults();
+    drive.setInverted(true);
 
 
     driveEncoder = drive.getEncoder();
@@ -94,7 +95,7 @@ public class SwerveModule {
   }
 
   public void setState(SwerveModuleState state) {
-    double angleRadians = -state.angle.getRadians();
+    double angleRadians = state.angle.getRadians();
     double speedMs = state.speedMetersPerSecond;
 
     SmartDashboard.putNumber("Set Turn " + TURN_ID + " to ", (angleRadians) * 180 / Math.PI);

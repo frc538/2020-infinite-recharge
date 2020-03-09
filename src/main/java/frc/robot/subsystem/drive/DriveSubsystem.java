@@ -59,13 +59,13 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void drive(double forwardRate, double rightRate, double rotationRate) {
     SwerveModuleState[] states = kinematics.toSwerveModuleStates(
-        new ChassisSpeeds(linearSpeed(forwardRate), linearSpeed(rightRate), angularSpeed(rotationRate)));
+        new ChassisSpeeds(linearSpeed(-forwardRate), linearSpeed(rightRate), angularSpeed(rotationRate)));
 
     SwerveDriveKinematics.normalizeWheelSpeeds(states, SwerveModule.MAX_SPEED_METERS_PER_SECOND);
-    frontLeftModule.setState(states[1]);
-    frontRightModule.setState(states[0]);
-    rearRightModule.setState(states[3]);
-    rearLeftModule.setState(states[2]);
+    frontLeftModule.setState(states[0]);
+    frontRightModule.setState(states[1]);
+    rearRightModule.setState(states[2]);
+    rearLeftModule.setState(states[3]);
   }
 
   @Override
