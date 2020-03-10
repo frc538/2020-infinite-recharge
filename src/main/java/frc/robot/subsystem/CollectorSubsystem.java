@@ -25,7 +25,6 @@ public class CollectorSubsystem extends SubsystemBase {
   }
 
   public void collect(double speed) {
-    SmartDashboard.putNumber("Collector Speed", speed);
     collector.set(speed);
   }
 
