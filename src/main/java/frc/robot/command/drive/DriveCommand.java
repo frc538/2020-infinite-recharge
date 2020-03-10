@@ -58,9 +58,14 @@ public class DriveCommand extends CommandBase {
       joystickRight = magnitude;
     }
 
+    double rotation = mJoystick.getZ();
+    if(magnitude > 0.2) {
+      rotation = 0;
+    }
 
 
-    mDrive.drive(joystickForward, joystickRight, mJoystick.getZ());
+
+    mDrive.drive(joystickForward, joystickRight, rotation);
   }
 
   // Called once the command ends or is interrupted.

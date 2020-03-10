@@ -5,23 +5,30 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.command.collect;
+package frc.robot.command.drive;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.subsystem.CollectorSubsystem;
+import frc.robot.subsystem.drive.DriveSubsystem;
 
-public class CollectCommand extends CommandBase {
-  private final CollectorSubsystem mCollector;
-  private final XboxController mJoystick;
+public class AutoDriveCommand extends CommandBase {
+
+  private final DriveSubsystem mDrive;
+  private final double mForward;
+  private final double mRight;
+  private final double mYaw;
+
   /**
-   * Creates a new Collect.
+   * Creates a new AutoDriveCommand.
    */
-  public CollectCommand(CollectorSubsystem collector, XboxController joystick) {
-    mCollector = collector;
-    mJoystick = joystick;
-    addRequirements(mCollector);
+  public AutoDriveCommand(DriveSubsystem drive, double forward, double right, double yaw) {
+
+    mDrive = drive;
+    mForward = forward;
+    mRight = right;
+    mYaw = yaw; 
+
+    addRequirements(mDrive);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -32,7 +39,7 @@ public class CollectCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mCollector.collect(Math.abs(mJoystick.getRawAxis(Constants.BUTTON_ID.COLLECTOR)));
+    mDrive.drive(mForward, mRight, mYaw);
   }
 
   // Called once the command ends or is interrupted.

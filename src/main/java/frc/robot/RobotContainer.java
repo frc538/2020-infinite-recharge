@@ -7,11 +7,16 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.command.climb.ExtendCommand;
 import frc.robot.command.climb.LiftCommand;
@@ -22,6 +27,7 @@ import frc.robot.command.colorwheel.ReadColorCommand;
 import frc.robot.command.colorwheel.ResetColorCommand;
 import frc.robot.command.colorwheel.ToggleHeightCommand;
 import frc.robot.command.colorwheel.ToggleSpinCommand;
+import frc.robot.command.drive.AutoDriveCommand;
 import frc.robot.command.drive.DriveCommand;
 import frc.robot.command.shooter.ShootCommand;
 import frc.robot.subsystem.CollectorSubsystem;
@@ -47,6 +53,7 @@ public class RobotContainer {
   private final CollectorSubsystem collector = new CollectorSubsystem();
   private final ClimberSubsystem climber = new ClimberSubsystem();
   private final ColorWheelSubsystem colorWheel = new ColorWheelSubsystem();
+  private final Command autoDriveForward = new ParallelRaceGroup(new AutoDriveCommand(drive, 0.5, 0, 0), new WaitCommand(2)).andThen(new AutoDriveCommand(drive, 0, 0, 0));
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -55,6 +62,11 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     drive.setDefaultCommand(new DriveCommand(drive, joystick));
+    collector.setDefaultCommand(new CollectCommand(collector, xbox));
+    NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
+    limelight.getEntry("ledMode").setDouble(1);
+
+
   }
 
   /**
@@ -65,11 +77,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     JoystickButton shoot = new JoystickButton(xbox, Constants.BUTTON_ID.SHOOTER);
-    shoot.whenHeld(new ShootCommand(shooter, true));
-    shoot.whenReleased(new ShootCommand(shooter, false));
-
-    JoystickButton collect = new JoystickButton(xbox, Constants.BUTTON_ID.COLLECTOR);
-    collect.whenReleased(new CollectCommand(collector));
+    shoot.whenReleased(new ShootCommand(shooter));
 
     JoystickButton key = new JoystickButton(nukeButton, Constants.BUTTON_ID.KEY);
     JoystickButton button = new JoystickButton(nukeButton, Constants.BUTTON_ID.RED_BUTTON);
@@ -103,7 +111,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return null;
+    return autoDriveForward;
   }
 
   public void initialize() {
