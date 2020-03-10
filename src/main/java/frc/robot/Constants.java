@@ -47,7 +47,7 @@ public final class Constants {
 
     public static class BUTTON_ID {
         public static final int SHOOTER = XboxController.Button.kA.value;
-        public static final int COLLECTOR = XboxController.Button.kX.value;
+        public static final int COLLECTOR = XboxController.Axis.kLeftTrigger.value;
         public static final int LIFT = XboxController.Button.kY.value;
         public static final int COLOR_TOGGLE = XboxController.Button.kB.value;
 

@@ -15,6 +15,7 @@ import frc.robot.Constants;
 public class ShooterSubsystem extends SubsystemBase {
 
   private final CANSparkMax shooter = new CANSparkMax(Constants.CAN_ID.SHOOTER, MotorType.kBrushless);
+  private boolean isOn = false;
 
   /**
    * Creates a new Shooter.
@@ -23,12 +24,25 @@ public class ShooterSubsystem extends SubsystemBase {
     shooter.setInverted(true);
   }
 
+  
+
   public void shoot() {
     shooter.set(1);
+    isOn = true;
   }
 
   public void stop() {
     shooter.set(0);
+    isOn = false;
+  }
+
+  public void toggleShoot(){
+
+    if(isOn){
+      stop();
+    } else{
+      shoot();
+    }
   }
 
   @Override

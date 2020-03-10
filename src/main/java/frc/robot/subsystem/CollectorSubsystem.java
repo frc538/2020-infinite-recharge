@@ -8,33 +8,27 @@
 package frc.robot.subsystem;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class CollectorSubsystem extends SubsystemBase {
 
   private final WPI_TalonSRX collector = new WPI_TalonSRX(Constants.CAN_ID.COLLECTOR);
-  private boolean isOn = false;
 
   /**
    * Creates a new BallCollector.
    */
   public CollectorSubsystem() {
+    collector.setInverted(true);
   }
 
-  public boolean isOn() {
-    return isOn;
+  public void collect(double speed) {
+    SmartDashboard.putNumber("Collector Speed", speed);
+    collector.set(speed);
   }
 
-  public void collect() {
-    collector.set(-0.75);
-    isOn = true;
-  }
-
-  public void stop() {
-    collector.set(0);
-    isOn = false;
-  }
 
   @Override
   public void periodic() {

@@ -7,17 +7,20 @@
 
 package frc.robot.command.collect;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystem.CollectorSubsystem;
 
 public class CollectCommand extends CommandBase {
   private final CollectorSubsystem mCollector;
-
+  private final XboxController mJoystick;
   /**
    * Creates a new Collect.
    */
-  public CollectCommand(CollectorSubsystem collector) {
+  public CollectCommand(CollectorSubsystem collector, XboxController joystick) {
     mCollector = collector;
+    mJoystick = joystick;
     addRequirements(mCollector);
   }
 
@@ -29,11 +32,7 @@ public class CollectCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (mCollector.isOn()) {
-      mCollector.stop();
-    } else {
-      mCollector.collect();
-    }
+    mCollector.collect(Math.abs(mJoystick.getRawAxis(Constants.BUTTON_ID.COLLECTOR)));
   }
 
   // Called once the command ends or is interrupted.
@@ -44,6 +43,6 @@ public class CollectCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

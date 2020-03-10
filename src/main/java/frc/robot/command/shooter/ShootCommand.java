@@ -12,14 +12,12 @@ import frc.robot.subsystem.ShooterSubsystem;
 
 public class ShootCommand extends CommandBase {
   private final ShooterSubsystem mShooter;
-  private final boolean mShoot;
 
   /**
    * Creates a new Shoot.
    */
-  public ShootCommand(ShooterSubsystem shooter, boolean shoot) {
+  public ShootCommand(ShooterSubsystem shooter) {
     mShooter = shooter;
-    mShoot = shoot;
     addRequirements(mShooter);
   }
 
@@ -31,11 +29,9 @@ public class ShootCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (mShoot) {
-      mShooter.shoot();
-    } else {
-      mShooter.stop();
-    }
+    
+    mShooter.toggleShoot();
+
   }
 
   // Called once the command ends or is interrupted.

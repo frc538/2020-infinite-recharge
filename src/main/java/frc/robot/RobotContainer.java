@@ -55,6 +55,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     drive.setDefaultCommand(new DriveCommand(drive, joystick));
+    collector.setDefaultCommand(new CollectCommand(collector, xbox));
   }
 
   /**
@@ -65,11 +66,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     JoystickButton shoot = new JoystickButton(xbox, Constants.BUTTON_ID.SHOOTER);
-    shoot.whenHeld(new ShootCommand(shooter, true));
-    shoot.whenReleased(new ShootCommand(shooter, false));
-
-    JoystickButton collect = new JoystickButton(xbox, Constants.BUTTON_ID.COLLECTOR);
-    collect.whenReleased(new CollectCommand(collector));
+    shoot.whenReleased(new ShootCommand(shooter));
 
     JoystickButton key = new JoystickButton(nukeButton, Constants.BUTTON_ID.KEY);
     JoystickButton button = new JoystickButton(nukeButton, Constants.BUTTON_ID.RED_BUTTON);
