@@ -7,9 +7,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -24,6 +27,9 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
+
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -57,6 +63,9 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    SmartDashboard.putNumber("LimeLight X", limelight.getEntry("tx").getDouble(0.0));
+    SmartDashboard.putNumber("LimeLight y", limelight.getEntry("ty").getDouble(0.0));
+    SmartDashboard.putNumber("LimeLight valid", limelight.getEntry("tv").getDouble(0.0));
   }
 
   /**
